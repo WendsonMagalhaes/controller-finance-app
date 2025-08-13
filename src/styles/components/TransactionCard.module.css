@@ -1,0 +1,75 @@
+:root {
+    --green-income: #177245;
+    --red-expense: #ef3054;
+}
+
+.card {
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.income {
+    border-left: 6px solid var(--green-income);
+}
+
+.expense {
+    border-left: 6px solid var(--red-expense);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+}
+
+.category {
+    color: #555;
+    font-size: 1rem;
+}
+
+.date {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.description {
+    color: #333;
+    font-size: 1rem;
+}
+
+.amount {
+    font-weight: 700;
+    font-size: 1.15rem;
+}
+
+.income .amount {
+    color: var(--green-income);
+}
+
+.expense .amount {
+    color: var(--red-expense);
+}
+
+.installment {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+}

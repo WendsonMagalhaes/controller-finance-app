@@ -1,0 +1,109 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #c6ebbe 0%, #a8d59f 100%);
+    padding: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form {
+    background: #fff;
+    padding: 2.5rem 3rem;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 100%;
+    box-shadow: 0 8px 20px rgba(127, 194, 155, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: transform 0.3s ease;
+}
+
+.form:hover {
+    transform: translateY(-5px);
+}
+
+.title {
+    margin-bottom: 2rem;
+    color: #7fc29b;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.label {
+    display: block;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #b9d8bc;
+    border-radius: 8px;
+    font-size: 1.125rem;
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    border-color: #7fc29b;
+    outline: none;
+    box-shadow: 0 0 8px rgba(127, 194, 155, 0.5);
+}
+
+.button {
+    width: 100%;
+    padding: 12px 0;
+    background-color: #7fc29b;
+    border: none;
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+    margin-top: 1rem;
+    user-select: none;
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.button:not(:disabled):hover {
+    background-color: #6bb07f;
+    box-shadow: 0 4px 12px rgba(107, 176, 127, 0.6);
+}
+
+.error {
+    color: #d9534f;
+    background-color: #fbeaea;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 0 8px rgba(217, 83, 79, 0.2);
+}
+
+.success {
+    color: #2d7a2d;
+    background-color: #e4f6e4;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 0 8px rgba(45, 122, 45, 0.2);
+}
