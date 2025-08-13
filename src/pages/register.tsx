@@ -2,8 +2,17 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import styles from '../styles/pages/register.module.css'
 
+interface RegisterForm {
+    name: string
+    email: string
+    password: string
+    confirmPassword: string
+}
+
+
+
 export default function Register() {
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<RegisterForm>({
         name: '',
         email: '',
         password: '',
@@ -18,7 +27,7 @@ export default function Register() {
         setForm((prev) => ({ ...prev, [name]: value }))
     }
 
-    async function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setError('')
         setSuccess('')
@@ -35,15 +44,16 @@ export default function Register() {
 
         try {
             setLoading(true)
-            await axios.post('/api/users', {
-                name: form.name,
-                email: form.email,
-                password: form.password,
-            })
+
+
             setSuccess('Usuário criado com sucesso! Você já pode fazer login.')
             setForm({ name: '', email: '', password: '', confirmPassword: '' })
-        } catch (err: any) {
-            setError(err.response?.data?.error || 'Erro ao criar usuário. Tente novamente.')
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                setError(err.response?.data?.error || 'Erro ao criar usuário. Tente novamente.')
+            } else {
+                setError('Erro inesperado. Tente novamente.')
+            }
         } finally {
             setLoading(false)
         }

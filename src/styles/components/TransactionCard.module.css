@@ -1,8 +1,3 @@
-:root {
-    --green-income: #177245;
-    --red-expense: #ef3054;
-}
-
 .card {
     border-radius: 10px;
     padding: 1.25rem 1.5rem;

@@ -33,6 +33,15 @@ type Category = {
     type: string
 }
 
+interface TransactionAPIResponse {
+    id: number
+    description?: string
+    amount: string | number
+    date: string
+    type: 'receita' | 'despesa'
+    categories?: { name: string }
+}
+
 function monthYearKey(dateString: string) {
     const date = new Date(dateString)
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`
@@ -42,17 +51,19 @@ export default function HomePage() {
     const [transactions, setTransactions] = useState<TransactionData[]>([])
     const [categories, setCategories] = useState<Category[]>([])
     const [isModalOpen, setModalOpen] = useState(false)
+
+    const { user } = useUser()
+
     const getCurrentMonthYearKey = () => {
         const now = new Date()
         return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`
     }
     const [selectedMonth, setSelectedMonth] = useState<string | null>(getCurrentMonthYearKey())
-    const { user } = useUser()
 
     useEffect(() => {
         async function fetchCategories() {
             try {
-                const res = await axios.get('/api/categories')
+                const res = await axios.get<Category[]>('/api/categories')
                 setCategories(res.data)
             } catch (error) {
                 console.error('Erro ao carregar categorias:', error)
@@ -65,10 +76,10 @@ export default function HomePage() {
         async function fetchTransactions() {
             if (!user) return
             try {
-                const response = await axios.get('/api/transactions', {
+                const response = await axios.get<TransactionAPIResponse[]>('/api/transactions', {
                     params: { userId: user.id },
                 })
-                const data: TransactionData[] = response.data.map((tx: any) => ({
+                const data: TransactionData[] = response.data.map((tx) => ({
                     id: tx.id,
                     description: tx.description,
                     amount: Number(tx.amount),
@@ -91,42 +102,35 @@ export default function HomePage() {
         }
         try {
             const payload = { ...data, userId: user.id }
-            const response = await axios.post('/api/transactions', payload)
-            if (Array.isArray(response.data)) {
-                setTransactions((old) => [
-                    ...old,
-                    ...response.data.map((tx: any) => ({
-                        id: tx.id,
-                        description: tx.description,
-                        amount: Number(tx.amount),
-                        date: tx.date,
-                        type: tx.type,
-                        categoryName: tx.categories?.name ?? 'Sem categoria',
-                    })),
-                ])
-            } else {
-                const tx = response.data
-                setTransactions((old) => [
-                    ...old,
-                    {
-                        id: tx.id,
-                        description: tx.description,
-                        amount: Number(tx.amount),
-                        date: tx.date,
-                        type: tx.type,
-                        categoryName: tx.categories?.name ?? 'Sem categoria',
-                    },
-                ])
-            }
+            const response = await axios.post<TransactionAPIResponse | TransactionAPIResponse[]>('/api/transactions', payload)
+
+            const newTransactions: TransactionData[] = Array.isArray(response.data)
+                ? response.data.map((tx) => ({
+                    id: tx.id,
+                    description: tx.description,
+                    amount: Number(tx.amount),
+                    date: tx.date,
+                    type: tx.type,
+                    categoryName: tx.categories?.name ?? 'Sem categoria',
+                }))
+                : [{
+                    id: response.data.id,
+                    description: response.data.description,
+                    amount: Number(response.data.amount),
+                    date: response.data.date,
+                    type: response.data.type,
+                    categoryName: response.data.categories?.name ?? 'Sem categoria',
+                }]
+
+            setTransactions((old) => [...old, ...newTransactions])
         } catch (error) {
             console.error('Erro ao salvar transação:', error)
             throw error
         }
     }
 
-    const months = Array.from(
-        new Set(transactions.map((tx) => monthYearKey(tx.date)))
-    ).sort((a, b) => (a > b ? 1 : -1))
+    const months = Array.from(new Set(transactions.map((tx) => monthYearKey(tx.date))))
+        .sort((a, b) => (a > b ? 1 : -1))
 
     const filteredTransactions = selectedMonth
         ? transactions.filter((tx) => monthYearKey(tx.date) === selectedMonth)
@@ -141,8 +145,7 @@ export default function HomePage() {
                 {months.map((month) => (
                     <button
                         key={month}
-                        className={`${styles.monthButton} ${selectedMonth === month ? styles.activeMonth : ''
-                            }`}
+                        className={`${styles.monthButton} ${selectedMonth === month ? styles.activeMonth : ''}`}
                         onClick={() => setSelectedMonth(month)}
                     >
                         {new Date(month + '-01').toLocaleDateString('pt-BR', {
@@ -152,8 +155,7 @@ export default function HomePage() {
                     </button>
                 ))}
                 <button
-                    className={`${styles.monthButton} ${selectedMonth === null ? styles.activeMonth : ''
-                        }`}
+                    className={`${styles.monthButton} ${selectedMonth === null ? styles.activeMonth : ''}`}
                     onClick={() => setSelectedMonth(null)}
                 >
                     Ver tudo
@@ -163,9 +165,7 @@ export default function HomePage() {
             <main className={styles.main}>
                 <h2 className={styles.heading}>Resumo Financeiro</h2>
 
-                {filteredTransactions.length === 0 && (
-                    <p>Nenhuma transação para esse período.</p>
-                )}
+                {filteredTransactions.length === 0 && <p>Nenhuma transação para esse período.</p>}
 
                 {filteredTransactions.map((tx) => (
                     <TransactionCard

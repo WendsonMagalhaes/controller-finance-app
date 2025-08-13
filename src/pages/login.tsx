@@ -1,9 +1,17 @@
-// src/pages/login.tsx
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import styles from '../styles/pages/login.module.css'
 import { useUser } from '../contexts/UserContext'
+
+interface LoginResponse {
+    user: {
+        id: number
+        name: string
+        email: string
+    }
+    token: string
+}
 
 export default function Login() {
     const router = useRouter()
@@ -14,17 +22,21 @@ export default function Login() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
-    async function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setError('')
         setLoading(true)
 
         try {
-            const res = await axios.post('/api/users/login', { email, password })
+            const res = await axios.post<LoginResponse>('/api/users/login', { email, password })
             loginUser(res.data.user)
             router.push('/')
-        } catch (err: any) {
-            setError(err.response?.data?.error || 'Erro ao fazer login')
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                setError(err.response?.data?.error || 'Erro ao fazer login')
+            } else {
+                setError('Erro inesperado ao fazer login')
+            }
         } finally {
             setLoading(false)
         }

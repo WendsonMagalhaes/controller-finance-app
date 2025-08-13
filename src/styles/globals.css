@@ -1,6 +1,15 @@
 :root {
   --background: #f9f9f9;
   --foreground: #f9f9f9;
+
+  --header-height: 80px;
+  --sidebar-width: 250px;
+  --sidebar-width-open: 250px;
+  --green-income: #177245;
+  --red-expense: #ef3054;
+  --main-green: #7fc29b;
+
+
 }
 
 @media (prefers-color-scheme: dark) {

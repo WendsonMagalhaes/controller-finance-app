@@ -1,10 +1,3 @@
-:root {
-    --header-height: 60px;
-    --sidebar-width-open: 250px;
-    --sidebar-width-closed: 60px;
-    --main-green: #7fc29b;
-}
-
 .sidebar {
     position: fixed;
     top: var(--header-height);

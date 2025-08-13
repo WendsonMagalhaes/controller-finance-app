@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import axios from 'axios'
 import styles from '../styles/components/TransactionFormModal.module.css'
 import { useUser } from '../contexts/UserContext'
 
@@ -12,7 +11,7 @@ interface Category {
 interface TransactionFormModalProps {
     isOpen: boolean
     onClose: () => void
-    onSave: (data: any) => void
+    onSave: (data: FormState) => void
     categories: Category[]
 }
 
@@ -69,10 +68,6 @@ export default function TransactionFormModal({
         })
     }
 
-    function handleClose() {
-        resetForm()
-        onClose()
-    }
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
